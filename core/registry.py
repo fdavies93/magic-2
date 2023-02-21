@@ -8,6 +8,19 @@ class Registry:
     def __init__(self):
         self.scripts = {}
 
+    def add_from_register(self, module):
+        if not hasattr(module, "__register__"):
+            return None
+        if not isinstance(module.__register__, (list, dict)):
+            return None
+        if isinstance(module.__register__, list):
+            for to_register in module.__register__:
+                print(to_register.__name__)
+        if isinstance(module.__register__, dict):
+            for name, func in module.__register__.items():
+                print(f"Import {func.__name__} as {name}")
+
+
     def import_scripts(self, script_path = "./scripts", script_config = None):
         # extra config unused for now, but probably useful for avoiding clashes and lack of clarity later
         # non-recursive implementation for now, could be made recursive later with name fudging
@@ -30,3 +43,4 @@ class Registry:
             # sys.modules[split_name[0]] = module
             spec.loader.exec_module(module)
             print(dir(module))
+            self.add_from_register(module)
