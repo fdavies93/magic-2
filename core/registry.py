@@ -11,6 +11,8 @@ class Registry:
     def import_scripts(self, script_path = "./scripts", script_config = None):
         # extra config unused for now, but probably useful for avoiding clashes and lack of clarity later
         # non-recursive implementation for now, could be made recursive later with name fudging
+        # loading ALL functions from all scripts to registry is probably too aggressive; scripts need a way
+        # to specify which functions they want to be picked up by the registry
         scripts = listdir(script_path)
         print(scripts)
         for script in scripts:
