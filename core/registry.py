@@ -11,11 +11,14 @@ class Registry:
     def execute(self, name, **kwargs):
         if not name in self.scripts:
             # should this throw an error?
-            return
+            raise ValueError(f"No script with name {name} found in registry.")
         return self.scripts[name](**kwargs)
     
     def get_script_names(self):
         return list(self.scripts.keys())
+
+    def has(self, script):
+        return script in self.scripts
 
     def add_from_register(self, path, name):
         print(f"Caching functions from {path}")
