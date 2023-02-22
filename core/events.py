@@ -19,7 +19,7 @@ class Events:
             self.registry.execute(script, **kwargs)
 
     def mount_default_events(self):
-        defaults = { "on_mount", "on_start", "on_tick" }
+        defaults = { "on_mount", "on_start", "on_tick", "on_shutdown" }
         available_scripts = self.registry.get_script_names()
         for script in available_scripts:
             script_parts = script.split(".")
