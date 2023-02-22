@@ -17,3 +17,13 @@ class Events:
             return
         for script in self.triggers[event_name]:
             self.registry.execute(script, **kwargs)
+
+    def mount_default_events(self):
+        defaults = { "on_mount", "on_start", "on_tick" }
+        available_scripts = self.registry.get_script_names()
+        for script in available_scripts:
+            script_parts = script.split(".")
+            func_name = script_parts[-1]
+            if func_name in defaults:
+                self.add_trigger(func_name, script)
+                print(f"Added trigger for {script} on {func_name}")

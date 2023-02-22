@@ -14,15 +14,15 @@ class Registry:
             raise ValueError(f"No script with name {name} found in registry.")
         return self.scripts[name](**kwargs)
     
-    def get_script_names(self):
+    def get_script_names(self) -> list[str]:
         return list(self.scripts.keys())
 
     def has(self, script):
         return script in self.scripts
 
-    def add_from_register(self, path, name):
+    def add_from_register(self, path, module_name):
         print(f"Caching functions from {path}")
-        spec = spec_from_file_location(name, path)
+        spec = spec_from_file_location(module_name, path)
         module = module_from_spec(spec)
         spec.loader.exec_module(module)
 
@@ -32,12 +32,14 @@ class Registry:
             return
         if isinstance(module.__register__, list):
             for func in module.__register__:
-                print(func.__name__)
-                self.scripts[func.__name__] = func
+                script_name = ".".join((module_name,func.__name__))
+                print(f"Import {func.__name__} as {script_name}")
+                self.scripts[script_name] = func
         if isinstance(module.__register__, dict):
             for name, func in module.__register__.items():
-                print(f"Import {func.__name__} as {name}")
-                self.scripts[name] = func
+                script_name = ".".join((module_name,name))
+                print(f"Import {func.__name__} as {script_name}")
+                self.scripts[script_name] = func
         print(self.scripts)
 
 

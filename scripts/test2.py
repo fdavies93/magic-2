@@ -1,9 +1,7 @@
 def test_3():
     pass
 
-def test_4():
-    pass
+def on_mount(**kwargs):
+    print("Mounted from test2 successfully.")
 
-__register__ = {
-    "function_1": test_3
-}
+__register__ = [test_3, on_mount]
