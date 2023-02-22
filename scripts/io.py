@@ -15,7 +15,7 @@ def on_tick(**context):
     io : CursesIO = components.of_type("io")[0]["curses"]
     next_input = io.pop_input()
     while next_input != None:
-        events.fire_event("input_received", text=next_input)
+        events.fire_event("input_received", text=next_input, **context)
         next_input = io.pop_input()
     io.poll()
 
