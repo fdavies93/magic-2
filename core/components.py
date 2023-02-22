@@ -11,10 +11,10 @@ class Components:
         # type is primary because the main consumer is systems which operate over types 
         self.components = {}
 
-    def add_component(self, component : Component):
+    def add(self, component : Component):
         if not component.type in self.components:
             self.components[component.type] = []
         self.components[component.type].append(component)
 
-    def get_type(self, type : str):
+    def of_type(self, type : str) -> list[Component]:
         return self.components[type]

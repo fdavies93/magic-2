@@ -11,8 +11,14 @@ components = Components()
 
 ev = Events(reg)
 ev.mount_default_events()
-ev.fire_event("on_mount", context=Context(ev, components))
 
+global_context = Context(ev,components)
+ev.fire_event("on_mount", context=global_context)
+
+ev.fire_event("on_start", context=global_context)
+
+timestamp = 0
 while True:
-    ev.fire_event("on_tick", text="Hello there!", context=Context(ev,components))
+    ev.fire_event("on_tick", timestamp=timestamp, context=global_context)
+    timestamp += 1
     time.sleep(1)
