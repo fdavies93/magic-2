@@ -6,6 +6,12 @@ class Component:
         self.type = type
         self.data = data
 
+    def __getitem__(self, key):
+        return self.data[key]
+
+    def __setitem__(self, key, value):
+        self.data[key] = value
+
 class Components:
     def __init__(self):
         # type is primary because the main consumer is systems which operate over types 
