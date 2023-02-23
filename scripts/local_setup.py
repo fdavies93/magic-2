@@ -15,4 +15,11 @@ def on_start(**context):
     components.add(player_descriptor)
     components.add(player_location)
 
+    box_id = components.get_next_id()
+    box_location = Component(box_id, "location", {"id": room_id})
+    box_descriptor = Component(box_id, "descriptor", {"name": "Box", "description": "A plain old box."})
+
+    components.add(box_location)
+    components.add(box_descriptor)
+
 __register__ = [on_start]

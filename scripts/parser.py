@@ -14,8 +14,9 @@ def parse(**context):
     input : str = context["text"]
     sender : str  = context["source"]
     # events.fire_event("output", output = f"Received input from object id {sender}", **generic_context)
+    split : str = input.split(" ")
 
-    if input == "look":
+    if split[0] == "look":
         location = components.on_object(sender, "location")
         if len(location) == 0:
             events.fire_event("output", output = "You have no location. You can't see anything.", **generic_context)
@@ -27,5 +28,16 @@ def parse(**context):
         room = room[0]
         events.fire_event("output", output = RichText(room["name"], color=COLOR.YELLOW), **generic_context)
         events.fire_event("output", output = room["description"], **generic_context)
+
+        locations = components.of_type("location")
+        locations : list[Component] = list(filter(lambda loc : loc["id"] == room.obj_id, locations))
+        names = []
+        for loc in locations:
+            descs = components.on_object(loc.obj_id, "descriptor")
+            if len(descs) == 0:
+                continue
+            names.append(descs[0]["name"])
+        if len(names) > 0:
+            events.fire_event("output", output = f"You can see {', '.join(names)}.", **generic_context)        
 
 __register__ = [parse, on_start]
