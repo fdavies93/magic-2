@@ -15,10 +15,10 @@ def test_start(**context):
     components : Components = context["components"]
     print("Starting game!")
     for i in range(5):
-        new_c = Component(i, "physics_body", {"pos": (0, 0)})
+        new_c = Component(components.get_next_id(), "physics_body", {"pos": (0, 0)})
         components.add(new_c)
 
 __register__ = {
-    "on_tick": test_tick,
+    # "on_tick": test_tick,
     "on_start": test_start
 }
