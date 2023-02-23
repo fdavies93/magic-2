@@ -2,10 +2,14 @@ from core.utility import get_generic_context
 from core.events import Events
 from core.components import Components, Component
 from core.interfaces.magic_io import *
+from scripts.utility import make_print
 
 def on_start(**context):
     events : Events = context["events"]
     events.add_trigger("input", "parser.parse")
+    
+    global pprint
+    pprint = make_print(**context)
 
 def parse(**context):
     components : Components = context["components"]
@@ -19,15 +23,15 @@ def parse(**context):
     if split[0] == "look":
         location = components.on_object(sender, "location")
         if len(location) == 0:
-            events.fire_event("output", output = "You have no location. You can't see anything.", **generic_context)
+            pprint("You have no location. You can't see anything.")
             return
         location = location[0]
         room = components.on_object(location["id"], "descriptor")
         if len(room) == 0:
             return
         room = room[0]
-        events.fire_event("output", output = RichText(room["name"], color=COLOR.YELLOW), **generic_context)
-        events.fire_event("output", output = room["description"], **generic_context)
+        pprint(RichText(room["name"], color=COLOR.YELLOW))
+        pprint(room["description"])
 
         locations = components.of_type("location")
         locations : list[Component] = list(filter(lambda loc : loc["id"] == room.obj_id, locations))
@@ -38,6 +42,6 @@ def parse(**context):
                 continue
             names.append(descs[0]["name"])
         if len(names) > 0:
-            events.fire_event("output", output = f"You can see {', '.join(names)}.", **generic_context)        
+            pprint(f"You can see {', '.join(names)}.")        
 
 __register__ = [parse, on_start]
