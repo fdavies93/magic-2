@@ -23,6 +23,12 @@ def parse(**context):
     input : str = context["text"]
     sender : str  = context["source"]
     split : str = input.split(" ")
+    verb : str = split[0]
+    skills = components.on_object(sender, "skills")
+    if len(skills) > 0:
+        skills = skills[0]
+    for skill in skills:
+        pass
 
     if split[0] == "look":
         location = components.on_object(sender, "location")

@@ -16,8 +16,10 @@ class Registry:
             raise ValueError(f"No script with name {name} found in registry.")
         return self.scripts[name](**kwargs)
     
-    def get_script_names(self) -> list[str]:
-        return list(self.scripts.keys())
+    def get_script_names(self, path = "") -> list[str]:
+        script_names = list(self.scripts.keys())
+        script_names = list(filter(lambda name : name[:len(path)] == path, script_names))
+        return script_names
 
     def has(self, script):
         return script in self.scripts
