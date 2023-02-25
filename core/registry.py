@@ -1,5 +1,5 @@
 from os import walk, listdir
-from os.path import isfile, splitext, join
+from os.path import isfile, splitext, join, isdir
 from importlib import import_module
 from importlib.util import spec_from_file_location, module_from_spec
 import sys
@@ -9,6 +9,8 @@ class Registry:
         self.scripts = {}
 
     def execute(self, name, **kwargs):
+        # Should be able to disable scripts in registry so they can't execute
+        # For convenience, config, and testing purposes
         if not name in self.scripts:
             # should this throw an error?
             raise ValueError(f"No script with name {name} found in registry.")
@@ -23,9 +25,8 @@ class Registry:
     def add_from_register(self, path, module_name):
         print(f"Caching functions from {path}")
         spec = spec_from_file_location(module_name, path)
-        module = module_from_spec(spec)
+        module = module_from_spec(spec)        
         spec.loader.exec_module(module)
-
         if not hasattr(module, "__register__"):
             return
         if not isinstance(module.__register__, (list, dict)):
@@ -43,18 +44,28 @@ class Registry:
         print(self.scripts)
 
 
-    def import_scripts(self, script_path = "./scripts", script_config = None):
-        # extra config unused for now, but probably useful for avoiding clashes and lack of clarity later
-        # non-recursive implementation for now, could be made recursive later with name fudging
-        scripts = listdir(script_path)
-        print(scripts)
-        for script in scripts:
-            if not isfile(join(script_path, script)):
+    def import_scripts(self, script_path = "./scripts", base_name = None, script_config = None):
+        # TODO:
+        # - Add recursive imports
+        # - Config option to disable scripts / specify default state
+        modules = listdir(script_path)
+        print(modules)
+        for module in modules:
+            if base_name != None:
+                cur_name = ".".join((base_name, module))
+            else:
+                cur_name = module
+
+            if isdir(join(script_path, module)):
+                self.import_scripts(join(script_path, module), cur_name, script_config)
                 continue
-            if script[:2] == "__":
+            elif not isfile(join(script_path, module)):
+                # unclear if this will ever trigger, but possibly guards against symbolic link weirdness
                 continue
-            split_name = splitext(script)
+            if module[:2] == "__":
+                continue
+            split_name = splitext(cur_name)
             if split_name[1] != ".py":
                 continue
             # scan all functions and add to module
-            self.add_from_register(join(script_path, script), split_name[0])
+            self.add_from_register(join(script_path, module), split_name[0])

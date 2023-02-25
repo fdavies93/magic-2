@@ -4,20 +4,24 @@ from core.components import Components, Component
 from core.interfaces.magic_io import *
 from scripts.utility import make_print
 
+# Important question (but doesn't need answering immediately):
+# Should Parser be a class rather than a plain function?
+# If so where should it be declared? In the core? As a demo script?
+# As a core.utility class?
+# I tend towards 'yes' for it being a class but am unclear on the
+# second question. Minimalism implies even the parser should be a
+# module.
+
 def on_start(**context):
     events : Events = context["events"]
     events.add_trigger("input", "parser.parse")
-    
     global pprint
     pprint = make_print(**context)
 
 def parse(**context):
     components : Components = context["components"]
-    generic_context = get_generic_context(context)
-    events : Events = context["events"]
     input : str = context["text"]
     sender : str  = context["source"]
-    # events.fire_event("output", output = f"Received input from object id {sender}", **generic_context)
     split : str = input.split(" ")
 
     if split[0] == "look":

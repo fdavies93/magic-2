@@ -13,6 +13,7 @@ ev = Events(reg)
 ev.mount_default_events()
 
 context = {
+    "registry": reg,
     "events": ev,
     "components": components
 }
