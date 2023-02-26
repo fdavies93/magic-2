@@ -2,7 +2,7 @@ from core.utility import get_generic_context
 from core.events import Events
 from core.components import Components, Component
 from core.interfaces.magic_io import *
-from scripts.utility import make_print
+from scripts.text_shared.utility import make_print
 
 # Important question (but doesn't need answering immediately):
 # Should Parser be a class rather than a plain function?

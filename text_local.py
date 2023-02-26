@@ -5,7 +5,8 @@ from core.components import Components
 from core.interfaces.CursesIO import CursesIO
 
 reg = Registry()
-reg.import_scripts("scripts")
+reg.import_scripts("scripts/text_shared")
+reg.import_scripts("scripts/text_local")
 
 components = Components()
 

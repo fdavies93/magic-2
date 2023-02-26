@@ -1,5 +1,5 @@
 from core.components import Components, Component
-from scripts.utility import make_print, get_objs_in_location
+from scripts.text_shared.utility import make_print, get_objs_in_location
 from core.interfaces.magic_io import COLOR, RichText
 
 def on_start(**context):

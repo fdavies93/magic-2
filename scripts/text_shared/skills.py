@@ -1,7 +1,7 @@
 from core.registry import Registry
 from core.events import Events
 from core.components import Components, Component
-from scripts.utility import make_print
+from scripts.text_shared.utility import make_print
 from dataclasses import dataclass
 
 # @dataclass
