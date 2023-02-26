@@ -22,36 +22,40 @@ def parse(**context):
     components : Components = context["components"]
     input : str = context["text"]
     sender : str  = context["source"]
+    ev : Events = context["events"]
     split : str = input.split(" ")
     verb : str = split[0]
-    skills = components.on_object(sender, "skills")
-    if len(skills) > 0:
-        skills = skills[0]
-    for skill in skills:
-        pass
+    con = get_generic_context(context)
+    con["verb"] = verb
+    con["args"] = split[1:]
+    con["sender"] = sender
+    fired = ev.fire_event(f"attempt_{verb}", **con)
 
-    if split[0] == "look":
-        location = components.on_object(sender, "location")
-        if len(location) == 0:
-            pprint("You have no location. You can't see anything.")
-            return
-        location = location[0]
-        room = components.on_object(location["id"], "descriptor")
-        if len(room) == 0:
-            return
-        room = room[0]
-        pprint(RichText(room["name"], color=COLOR.YELLOW))
-        pprint(room["description"])
+    if not fired:
+        pprint(f"I don't understand what {verb} means.")
 
-        locations = components.of_type("location")
-        locations : list[Component] = list(filter(lambda loc : loc["id"] == room.obj_id, locations))
-        names = []
-        for loc in locations:
-            descs = components.on_object(loc.obj_id, "descriptor")
-            if len(descs) == 0:
-                continue
-            names.append(descs[0]["name"])
-        if len(names) > 0:
-            pprint(f"You can see {', '.join(names)}.")        
+    # if split[0] == "look":
+    #     location = components.on_object(sender, "location")
+    #     if len(location) == 0:
+    #         pprint("You have no location. You can't see anything.")
+    #         return
+    #     location = location[0]
+    #     room = components.on_object(location["id"], "descriptor")
+    #     if len(room) == 0:
+    #         return
+    #     room = room[0]
+    #     pprint(RichText(room["name"], color=COLOR.YELLOW))
+    #     pprint(room["description"])
+
+    #     locations = components.of_type("location")
+    #     locations : list[Component] = list(filter(lambda loc : loc["id"] == room.obj_id, locations))
+    #     names = []
+    #     for loc in locations:
+    #         descs = components.on_object(loc.obj_id, "descriptor")
+    #         if len(descs) == 0:
+    #             continue
+    #         names.append(descs[0]["name"])
+    #     if len(names) > 0:
+    #         pprint(f"You can see {', '.join(names)}.")        
 
 __register__ = [parse, on_start]

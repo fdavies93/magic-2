@@ -1,5 +1,8 @@
 from core.registry import Registry
 
+# Should data be a straight dict or a dataclass?
+# Former is easier to use; latter allows code completion and better self-documenting behaviour.
+# Or should component be an ABC like Unity's Monobehaviour?
 class Component:
     def __init__(self, obj_id : int, type : str, data : dict):
         self.obj_id = obj_id
@@ -11,6 +14,9 @@ class Component:
 
     def __setitem__(self, key, value):
         self.data[key] = value
+
+    def __contains__(self, key):
+        return key in self.data
 
 class Components:
     def __init__(self):

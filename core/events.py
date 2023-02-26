@@ -1,5 +1,8 @@
 from core.registry import Registry
 
+# It might be worthwhile implementing events as a priority queue which accumulates each update
+# This should allow better behaviour with more complex systems without having a ton of different
+# events messing up the namespace.
 class Events:
     def __init__(self, my_registry : Registry):
         self.registry = my_registry
@@ -14,9 +17,10 @@ class Events:
 
     def fire_event(self, event_name, **kwargs):
         if not event_name in self.triggers:
-            return
+            return False
         for script in self.triggers[event_name]:
             self.registry.execute(script, **kwargs)
+        return True
 
     def mount_default_events(self):
         defaults = { "on_mount", "on_start", "on_tick", "on_shutdown" }

@@ -11,9 +11,11 @@ def on_start(**context):
     player_input_source = Component(player_id, "input_source", {})
     player_descriptor = Component(player_id, "descriptor", {"name": "Player", "description": "You're looking very handsome."})
     player_location = Component(player_id, "location", {"id": room_id})
+    player_skills = Component(player_id, "skills", {"look"})
     components.add(player_input_source)
     components.add(player_descriptor)
     components.add(player_location)
+    components.add(player_skills)
 
     box_id = components.get_next_id()
     box_location = Component(box_id, "location", {"id": room_id})
