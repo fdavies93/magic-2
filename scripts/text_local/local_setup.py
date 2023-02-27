@@ -1,7 +1,8 @@
 from core.components import Component, Components
+from core.context import Context
 
-def on_start(**context):
-    components : Components = context["components"]
+def on_start(context : Context):
+    components : Components = context.components
 
     room_id = components.get_next_id()
     room_descriptor = Component(room_id, "descriptor", {"name": "A room.", "description": "This is a test description."})

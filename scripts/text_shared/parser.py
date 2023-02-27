@@ -3,6 +3,8 @@ from core.events import Events
 from core.components import Components, Component
 from core.interfaces.magic_io import *
 from scripts.text_shared.utility import make_print
+from scripts.text_shared.contexts import InputContext, UseSkillContext
+from core.context import Context
 
 # Important question (but doesn't need answering immediately):
 # Should Parser be a class rather than a plain function?
@@ -12,25 +14,18 @@ from scripts.text_shared.utility import make_print
 # second question. Minimalism implies even the parser should be a
 # module.
 
-def on_start(**context):
-    events : Events = context["events"]
-    events.add_trigger("input", "parser.parse")
+def on_start(context : Context):
+    context.events.add_trigger("input", "parser.parse")
     global pprint
-    pprint = make_print(**context)
+    pprint = make_print(context)
 
-def parse(**context):
+def parse(context : InputContext):
     # ugly, ugly, ugly
-    # this could all be one-liners if context were an ABC
-    input : str = context["text"]
-    sender : str  = context["source"]
-    ev : Events = context["events"]
-    split : str = input.split(" ")
+    # this could all be one-liners if context were an ABC\
+    split : str = context.text.split(" ")
     verb : str = split[0]
-    con = get_generic_context(context)
-    con["verb"] = verb
-    con["args"] = split[1:]
-    con["sender"] = sender
-    fired = ev.fire_event(f"attempt_{verb}", **con)
+    con = UseSkillContext(context.source, verb, split[1:], context)
+    fired = context.events.fire_event(f"attempt_{verb}", con)
 
     if not fired:
         pprint(f"I don't understand what {verb} means.")       

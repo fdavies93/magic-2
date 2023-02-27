@@ -8,13 +8,14 @@ class Registry:
     def __init__(self):
         self.scripts = {}
 
-    def execute(self, name, **kwargs):
+    def execute(self, name, context):
         # Should be able to disable scripts in registry so they can't execute
         # For convenience, config, and testing purposes
         if not name in self.scripts:
             # should this throw an error?
             raise ValueError(f"No script with name {name} found in registry.")
-        return self.scripts[name](**kwargs)
+        # print(f"Executing script {name}")
+        return self.scripts[name](context)
     
     def get_script_names(self, path = "") -> list[str]:
         script_names = list(self.scripts.keys())

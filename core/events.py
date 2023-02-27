@@ -15,11 +15,11 @@ class Events:
             self.triggers[event_name] = []
         self.triggers[event_name].append(script)
 
-    def fire_event(self, event_name, **kwargs):
+    def fire_event(self, event_name, context):
         if not event_name in self.triggers:
             return False
         for script in self.triggers[event_name]:
-            self.registry.execute(script, **kwargs)
+            self.registry.execute(script, context)
         return True
 
     def mount_default_events(self):
